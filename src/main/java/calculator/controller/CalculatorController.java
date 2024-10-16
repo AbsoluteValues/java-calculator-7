@@ -12,12 +12,10 @@ public class CalculatorController {
 
     public void execute() {
         calculatorService.printPrompt();
-        String rawInput = calculatorService.inputString();
+        String rawInput = calculatorService.input();
         String[] paredInput = calculatorService.parsingInput(rawInput);
-//        int result = calculatorService.validateInput(paredInput);
-//        if (result != 1) {
-//            throw new IllegalArgumentException("잘못된 입력()");
-//        }
-//        calculatorService.calculate(input);
+        String[] nums = calculatorService.validateInput(paredInput);
+        int result = calculatorService.sum(nums);
+        calculatorService.printResult(result);
     }
 }

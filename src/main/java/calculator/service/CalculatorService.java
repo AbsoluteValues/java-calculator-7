@@ -8,34 +8,55 @@ public class CalculatorService {
         System.out.println("덧셈할 문자열을 입력해 주세요.");
     }
 
-    public String inputString() {
-        return Console.readLine();
+    public String input() {
+        String text = Console.readLine().trim();
+        if (text.isEmpty()) {
+            return "0";
+        }
+        return text;
     }
 
     public String[] parsingInput(String rawInput) {
-        String[] list = rawInput.split(",|:");
-        for (int i = 0; i < list.length; i++) {
-            System.out.println(list[i]);
+        if (rawInput.contains(",") || rawInput.contains(":")) {
+            if (rawInput.startsWith(",") || rawInput.endsWith(":") || rawInput.startsWith(":") || rawInput.endsWith(",")) {
+                throw new IllegalArgumentException("잘못된 입력값입니다.");
+            }
+            return rawInput.split("[,:]");
+        } else if (rawInput.startsWith("//") && rawInput.contains("\\n")) {
+            int index = rawInput.indexOf("\\n");
+            String custom = rawInput.substring(2, index);
+            rawInput = rawInput.substring(index+2);
+            if ((rawInput.startsWith(custom) || rawInput.endsWith(custom))) {
+                throw new IllegalArgumentException("잘못된 입력값입니다.");
+            }
+            return rawInput.split(custom);
         }
-        return list;
+        return new String[]{rawInput};
     }
 
-//    public int validateInput(String[] input) {
-//        if (input.equals("0") || input.contains(",") || input.contains(":")) {
-//            return 1;
-//        } else {
-//            return 0;
-//        }
-//    }
-
-    public void calculate(String input) {
-        if (input.equals("0")) {
-
+    public String[] validateInput(String[] paredInput) {
+        for (String s : paredInput) {
+            try {
+                int num = Integer.parseInt(s);
+                if (num < 0) {
+                    throw new IllegalArgumentException("잘못된 입력값입니다.");
+                }
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("잘못된 입력값입니다.");
+            }
         }
-        if (input.contains(",") || input.contains(":")) {
-
-        }
+        return paredInput;
     }
 
+    public int sum(String[] nums) {
+        int result = 0;
+        for (String num : nums) {
+            result += Integer.parseInt(num);
+        }
+        return result;
+    }
 
+    public void printResult(int result) {
+        System.out.println("결과 : " + result);
+    }
 }
